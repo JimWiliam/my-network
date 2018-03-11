@@ -23,8 +23,7 @@ def _random_crop(batch, crop_shape, padding=None):
                                       mode='constant', constant_values=0)
         nh = random.randint(0, oshape[0] - crop_shape[0])
         nw = random.randint(0, oshape[1] - crop_shape[1])
-        new_batch[i] = new_batch[i][nh:nh + crop_shape[0],
-                       nw:nw + crop_shape[1]]
+        new_batch[i] = new_batch[i][nh:nh + crop_shape[0], nw:nw + crop_shape[1]]
     return new_batch
 
 
@@ -35,18 +34,12 @@ def _random_flip_leftright(batch):
     return batch
 
 
-def color_preprocessing(x_train, x_test):
-    x_train = x_train.astype('float32')
-    x_test = x_test.astype('float32')
-    x_train[:, :, :, 0] = (x_train[:, :, :, 0] - np.mean(x_train[:, :, :, 0])) / np.std(x_train[:, :, :, 0])
-    x_train[:, :, :, 1] = (x_train[:, :, :, 1] - np.mean(x_train[:, :, :, 1])) / np.std(x_train[:, :, :, 1])
-    x_train[:, :, :, 2] = (x_train[:, :, :, 2] - np.mean(x_train[:, :, :, 2])) / np.std(x_train[:, :, :, 2])
-
-    x_test[:, :, :, 0] = (x_test[:, :, :, 0] - np.mean(x_test[:, :, :, 0])) / np.std(x_test[:, :, :, 0])
-    x_test[:, :, :, 1] = (x_test[:, :, :, 1] - np.mean(x_test[:, :, :, 1])) / np.std(x_test[:, :, :, 1])
-    x_test[:, :, :, 2] = (x_test[:, :, :, 2] - np.mean(x_test[:, :, :, 2])) / np.std(x_test[:, :, :, 2])
-
-    return x_train, x_test
+def color_preprocessing(images):
+    images = images.astype('float32')
+    images[:, :, :, 0] = (images[:, :, :, 0] - np.mean(images[:, :, :, 0])) / np.std(images[:, :, :, 0])
+    images[:, :, :, 1] = (images[:, :, :, 1] - np.mean(images[:, :, :, 1])) / np.std(images[:, :, :, 1])
+    images[:, :, :, 2] = (images[:, :, :, 2] - np.mean(images[:, :, :, 2])) / np.std(images[:, :, :, 2])
+    return images
 
 
 def data_augmentation(batch):

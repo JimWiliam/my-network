@@ -49,7 +49,7 @@ def output_layer(input_layer, num_labels):
     '''
     input_dim = input_layer.get_shape().as_list()[-1]
     fc_w = create_variables(name='fc_weights', shape=[input_dim, num_labels], is_fc_layer=True,
-                            initializer=tf.uniform_unit_scaling_initializer(factor=1.0))
+                            initializer=tf.initializers.variance_scaling())
     fc_b = create_variables(name='fc_bias', shape=[num_labels], initializer=tf.zeros_initializer())
 
     fc_h = tf.matmul(input_layer, fc_w) + fc_b
@@ -201,19 +201,20 @@ def inference(input_tensor_batch, n, reuse):
 
         assert global_pool.get_shape().as_list()[-1:] == [64]
         output = output_layer(global_pool, num_classes)
+        # output = tf.nn.dropout(output, keep_prob=0.8)
         layers.append(output)
 
     return layers[-1]
 
 
-def test_graph(train_dir='logs'):
-    '''
-    Run this function to look at the graph structure on tensorboard. A fast way!
-    :param train_dir:
-    '''
-    input_tensor = tf.constant(np.ones([128, 32, 32, 3]), dtype=tf.float32)
-    result = inference(input_tensor, 2, reuse=False)
-    init = tf.initialize_all_variables()
-    sess = tf.Session()
-    sess.run(init)
-    summary_writer = tf.train.SummaryWriter(train_dir, sess.graph)
+# def test_graph(train_dir='logs'):
+#     '''
+#     Run this function to look at the graph structure on tensorboard. A fast way!
+#     :param train_dir:
+#     '''
+#     input_tensor = tf.constant(np.ones([128, 32, 32, 3]), dtype=tf.float32)
+#     result = inference(input_tensor, 2, reuse=False)
+#     init = tf.initialize_all_variables()
+#     sess = tf.Session()
+#     sess.run(init)
+#     summary_writer = tf.train.SummaryWriter(train_dir, sess.graph)
